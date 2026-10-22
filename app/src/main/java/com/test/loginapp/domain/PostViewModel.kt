@@ -1,42 +1,48 @@
 package com.test.loginapp.domain
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.test.loginapp.data.model.Post
-import com.test.loginapp.data.model.UiState
+import com.test.loginapp.data.api.PostResponse
+import com.test.loginapp.data.model.PostsUiState
 import com.test.loginapp.data.repository.PostNetworkServiceLoader
 import com.test.loginapp.data.repository.PostRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class PostViewModel(private val repository: PostRepository = PostNetworkServiceLoader.postRepository)  : ViewModel() {
+class PostViewModel(private val repository: PostRepository = PostNetworkServiceLoader.postRepository) :
+    ViewModel() {
 
 
-    //var posts by mutableStateOf<List<Post>>(emptyList())
-      //  private set
+    private val _uiPostState = MutableStateFlow<PostsUiState>(PostsUiState.Loading)
+    val uiPostState = _uiPostState.asStateFlow()
 
-    // Single source of state truth
-    var uiState by mutableStateOf(UiState())
-        private set
+    /*  In your ViewModel snippet, using Compose's mutableStateOf inside the ViewModel tightly
+      couples your ViewModel to the Compose UI framework.
+
+      var uiState by mutableStateOf(UiState())
+          private set
+
+     */
 
     fun fetchPosts() {
         viewModelScope.launch {
-            //isLoading = true
-            // We use .copy() because your UiState is a data class, and .copy() lets you update specific properties while keeping the others unchanged.
-            uiState = uiState.copy(isLoading = true, errorMessage = null)
-            try {
-                val posts = repository.getPosts()
-               // uiState = UiState(posts = posts)   // ⭐ calls Repository, not ApiService
-                uiState = uiState.copy(posts = posts, isLoading = false)
-            } catch (e: Exception) {
-                uiState = uiState.copy(
-                    errorMessage = e.message ?: "An unexpected error occurred",
-                    isLoading = false
-                )
+
+            val posts = repository.getPosts()
+
+            // Optional: Set loading state if refreshing
+            _uiPostState.value = PostsUiState.Loading
+
+            posts.catch { exception ->
+                _uiPostState.value = PostsUiState.Error(exception.localizedMessage ?: "Unknow Error")
+            }.collect { postResponses ->
+                _uiPostState.value = PostsUiState.Success(postResponses)
             }
+
         }
     }
+
+
+
 }

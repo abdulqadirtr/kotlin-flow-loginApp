@@ -43,96 +43,17 @@ class MainActivity : ComponentActivity() {
             LoginAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainApp()
-
-                   // TestRemeberCoroutineScope()
                 }
             }
         }
     }
 }
 
-
-@Composable
-fun TestRemeberCoroutineScope(modifier: Modifier = Modifier) {
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-    val scope = rememberCoroutineScope()
-
-
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        }
-    ) { padding ->
-
-        Button(
-            modifier = Modifier.padding(padding),
-            onClick = {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        "Saved successfully"
-                    )
-                }
-            }
-        ){
-
-            Text("Save")
-        }
-
-    }
-
-    }
-
-
-
-
-@Composable
-fun TestLaunchEffect(modifier: Modifier = Modifier) {
-
-  //  val counter by remember { mutableStateOf(0) }
-
-    var count by remember {
-        mutableStateOf(0)
-    }
-
-    LaunchedEffect(count) {
-
-        Log.e("counter 1","launch effect value changed")
-
-    }
-
-    Button(onClick = {count++}, modifier = Modifier
-        .fillMaxWidth()
-        .padding(20.dp)) {
-
-      //  count++
-       // print("Counter value changed ${counter}")
-        Log.e("counter 2","counter ${count}")
-
-
-    }
-
-}
 
 
 // ---- PARENT: Holds the state ----
 @Composable
 fun MainApp() {
-   /* var showPosts by remember { mutableStateOf(false) }
-
-    if (showPosts) {
-        PostScreen()
-    } else {
-        LoginScreen(
-            onLoginScreen = {
-                showPosts = true
-            }
-        )
-    }*/
-
     AppNavigation()
 
 }
@@ -216,38 +137,6 @@ fun HeaderCard(title: String,
     
 }
 
-
-@Composable
-fun LoginScreenPractice(
-    onLogin: () -> Unit
-) {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-    val enabled = username.isNotBlank() && password.isNotBlank()
-
-    Column {
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            modifier = Modifier.testTag("username")
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            modifier = Modifier.testTag("password")
-        )
-
-        Button(
-            onClick = onLogin,
-            enabled = enabled,
-            modifier = Modifier.testTag("login")
-        ) {
-            Text("Login")
-        }
-    }
-}
 
 
 

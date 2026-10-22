@@ -1,5 +1,6 @@
 package com.test.loginapp.data.model
 
+import com.test.loginapp.data.api.PostResponse
 import kotlinx.serialization.Serializable
 @Serializable
 data class Post(
@@ -25,6 +26,7 @@ data class UiState(
 )
 
 sealed class PostsUiState{
+    data object Loading : PostsUiState()
     data class Success(val posts : List<Post>) : PostsUiState()
-    data class Error(val exception: Throwable) : PostsUiState()
+    data class Error(val exception: String) : PostsUiState()
 }
