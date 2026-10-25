@@ -1,5 +1,6 @@
 package com.test.loginapp.data.model
 
+import com.test.loginapp.data.repository.PostWithAuthor
 import kotlinx.serialization.Serializable
 @Serializable
 data class Post(
@@ -20,11 +21,12 @@ data class Reactions(
 
 data class UiState(
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-    val posts: List<Post> = emptyList()
+    val posts: List<PostWithAuthor> = emptyList(), // <--- Updated to PostWithAuthor
+    val errorMessage: String? = null
 )
 
 sealed class PostsUiState{
     data class Success(val posts : List<Post>) : PostsUiState()
     data class Error(val exception: Throwable) : PostsUiState()
 }
+

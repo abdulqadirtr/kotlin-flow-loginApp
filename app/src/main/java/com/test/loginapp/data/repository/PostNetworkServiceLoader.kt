@@ -8,4 +8,17 @@ object PostNetworkServiceLoader {
 
         PostRepositoryImpl(ApiService.postApi)
     }
+
+    val usersRepository : UsersRepository by lazy {
+        UsersRepositoryImpl(ApiService.postApi)
+    }
+
+    val authorRepository : AuthorsPost by lazy {
+        AuthorsPostImp(ApiService.postApi)
+    }
+
+    // ⭐ Added Use Case provider to wire everything together cleanly
+    fun provideGetPostsUseCase(): GetPostsWithAuthorsUseCase {
+        return GetPostsWithAuthorsUseCase(authorRepository)
+    }
 }

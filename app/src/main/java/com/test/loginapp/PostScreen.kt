@@ -16,12 +16,22 @@ import com.test.loginapp.data.model.PostsUiState
 import com.test.loginapp.data.model.UiState
 import com.test.loginapp.domain.PostViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PostScreen(viewModel: PostViewModel = viewModel()) {
     LaunchedEffect(Unit) {
         viewModel.fetchPosts() // trigger fetch once when screen appears
     }
+
+    LaunchedEffect(key1 =  true) {
+        viewModel.uiEvent.collect { oneTimeEvent ->
+
+            print("This is the Channel values passed $oneTimeEvent")
+
+        }
+    }
+
     PostContent(viewModel.uiState)
 }
 @Composable
@@ -41,7 +51,7 @@ fun PostContent(uiState : UiState) {
                 LazyColumn (modifier = Modifier.testTag("post_list")) {
                     items(uiState.posts) { post ->
                         val safeTitle = post.title ?: "Untitled"
-                        val safeId = post.id ?: 0
+                        val safeId = post.postId ?: 0
                         Text(
                             safeTitle + safeId,
                             modifier = Modifier

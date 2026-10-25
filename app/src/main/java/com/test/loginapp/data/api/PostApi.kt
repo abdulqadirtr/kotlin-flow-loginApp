@@ -9,6 +9,6 @@ interface PostApi {
     @GET("posts")
     suspend fun getPost(): PostResponse
 
-    @GET("posts")
-    suspend fun getPostWithFlow(): Flow<PostResponse>
+    @GET("users")
+    suspend fun getUsers(): UsersResponse
 }
