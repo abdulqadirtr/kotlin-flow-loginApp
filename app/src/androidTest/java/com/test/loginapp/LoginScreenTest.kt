@@ -2,14 +2,10 @@ package com.test.loginapp
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -19,11 +15,10 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.printToLog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.test.loginapp.data.model.Post
 import com.test.loginapp.data.model.UiState
-import com.test.loginapp.domain.PostViewModel
-import kotlinx.coroutines.test.runTest
+import com.test.loginapp.ui.post.PostViewModel
+import com.test.loginapp.ui.login.PostContent
 import org.junit.Rule
 import org.junit.Test
 

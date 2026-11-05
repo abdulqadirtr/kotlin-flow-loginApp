@@ -1,4 +1,4 @@
-package com.test.loginapp
+package com.test.loginapp.ui.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,20 +12,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.test.loginapp.data.model.PostsUiState
 import com.test.loginapp.data.model.UiState
-import com.test.loginapp.domain.PostViewModel
-import kotlinx.coroutines.flow.StateFlow
+import com.test.loginapp.ui.post.PostIntent
+import com.test.loginapp.ui.post.PostSideEffect
+import com.test.loginapp.ui.post.PostViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun PostScreen(viewModel: PostViewModel = viewModel()) {
+fun PostScreen(viewModel: PostViewModel = viewModel(), onNavigateToDetail: (Int) -> Unit) {
     LaunchedEffect(Unit) {
-        viewModel.fetchPosts() // trigger fetch once when screen appears
+        viewModel.onIntent(PostIntent.LoadPosts) // trigger fetch once when screen appears
     }
-    PostContent(viewModel.uiState)
+
+    // Handle one-time side effects
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.collectLatest { effect ->
+            when (effect) {
+                is PostSideEffect.NavigateToDetail -> onNavigateToDetail(effect.postId)
+                is PostSideEffect.ShowSnackbar -> { /* Handle snackbar display */ }
+            }
+        }
+    }
+
+    PostContent(
+        viewModel.uiState,
+        onIntent = { intent -> viewModel.onIntent(intent)},
+        )
 }
 @Composable
-fun PostContent(uiState : UiState) {
+fun PostContent(uiState : UiState, onIntent: (PostIntent) -> Unit, ) {
 
     Column(modifier = Modifier
         .fillMaxSize()

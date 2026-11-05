@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.test.loginapp.LoginScreen
-import com.test.loginapp.PostScreen
+import com.test.loginapp.ui.login.LoginScreen
+import com.test.loginapp.ui.login.PostScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
@@ -29,7 +29,12 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
         composable(Routes.DETAILS){
 
-            PostScreen()
+            PostScreen(
+                onNavigateToDetail = { postId ->
+
+
+                }
+            )
 
         }
 
